@@ -59,7 +59,7 @@ namespace TaskManagement.TaskManagement.Api.Controllers
             return true;
         }
 
-        [HttpGet]
+        [HttpGet("ExecuteTask")]
         public async Task<TaskManage> ExecuteTask(int taskId)
       {
             using var client = new HttpClient();

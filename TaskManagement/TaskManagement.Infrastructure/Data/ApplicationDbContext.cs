@@ -33,17 +33,17 @@ namespace TaskManagement.TaskManagement.Infrastructure.Data
                     .HasMaxLength(1000);
 
                 entity.Property(t => t.ExecutionDateTime)
-                    .HasDefaultValueSql("GETDATE()")
+                    //.HasDefaultValueSql("GETDATE()")
                     .IsRequired();
 
                 entity.Property(t => t.Status)
                     .HasConversion<int>();
 
-                entity.Property(t => t.CreatedAt)
-                    .HasDefaultValueSql("GETDATE()");
+                entity.Property(t => t.CreatedAt);
+                    //.HasDefaultValueSql("GETDATE()");
 
-                entity.Property(t => t.UpdatedAt)
-                    .HasDefaultValueSql("GETDATE()");
+                entity.Property(t => t.UpdatedAt);
+                    //.HasDefaultValueSql("GETDATE()");
 
                 entity.Property(t => t.IsActive).HasDefaultValue(true);
             });

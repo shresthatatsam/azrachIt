@@ -22,8 +22,12 @@ namespace TaskManagement.TaskManagement.Application.Service
             {
 				//Added this for local Time 
 				#region LocalTime
-				dto.CreatedAt = DateTime.Now;
-				dto.UpdatedAt = DateTime.Now;
+				//dto.CreatedAt = DateTime.Now;
+				//dto.UpdatedAt = DateTime.Now;
+
+				dto.CreatedAt = DateTime.UtcNow;
+				dto.UpdatedAt = DateTime.UtcNow;
+
 				#endregion
 
 				await _Context.Tasks.AddAsync(dto);
