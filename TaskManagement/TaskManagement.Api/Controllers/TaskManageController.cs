@@ -24,6 +24,7 @@ namespace TaskManagement.TaskManagement.Api.Controllers
         {
             var data = await _taskService.Create(dto);
             BackgroundJob.Schedule(() => ExecuteTask(data.Id), data.ExecutionDateTime);
+
             return data;
         }
 
