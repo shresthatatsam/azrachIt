@@ -18,7 +18,7 @@ namespace TaskManagement.TaskManagement.Application.Service
             //Added this for local Time 
             #region LocalTime
             dto.ExecutionDateTime = DateTime.Now;
-            dto.CreatedAt = DateTime.Now; 
+            dto.CreatedAt = DateTime.Now;
             dto.UpdatedAt = DateTime.Now;
             #endregion
 
@@ -35,31 +35,48 @@ namespace TaskManagement.TaskManagement.Application.Service
                 throw new Exception("Dto is null");
             }
 
-            var taskManage = _Context.Tasks.Where(x=>x.IsActive == true).AsQueryable();
+            var taskManage = _Context.Tasks.Where(x => x.IsActive == true).AsQueryable();
 
-            if (dto.Id !=null)
+            if (dto.Id != null)
             {
-                taskManage= _Context.Tasks.Where(x => x.Id == dto.Id).AsQueryable();
+                taskManage = _Context.Tasks.Where(x => x.Id == dto.Id).AsQueryable();
             }
 
-            if(dto.Title !=null)
+            if (dto.Title != null)
             {
                 taskManage = _Context.Tasks.Where(x => x.Title == dto.Title).AsQueryable();
             }
 
             return await taskManage.ToListAsync();
         }
-        
-        public async Task<TaskManage> UpdateRecord( Guid id,    TaskManageDto dto)
+
+        public async Task<TaskManage> UpdateRecord(Guid id, TaskManageDto dto)
         {
             var data = _Context.Tasks.Where(x => x.Id == id).FirstOrDefault();
-            data.Description = dto.Description;
-            data.IsActive = dto.IsActive;
-            data.Title = dto.Title;
-            data.Status = dto.Status;
+            if (data != null)
+            {
 
+                data.Description = dto.Description;
+                data.IsActive = dto.IsActive;
+                data.Title = dto.Title;
+                data.Status = dto.Status;
+            }
             await _Context.SaveChangesAsync();
             return data;
+        }
+
+
+        public async Task<bool> DeleteRecord(Guid id)
+        {
+            var taskManage = await _Context.Tasks.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            if (taskManage == null)
+            {
+                return false;
+            }
+            _Context.Tasks.Remove(taskManage);
+            await _Context.SaveChangesAsync();
+            return true;
         }
 
     }

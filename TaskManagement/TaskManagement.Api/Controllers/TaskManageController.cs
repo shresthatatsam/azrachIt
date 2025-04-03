@@ -36,5 +36,12 @@ namespace TaskManagement.TaskManagement.Api.Controllers
             return updatedTask;
         }
 
+        [HttpDelete("{id}")]
+        public async Task<bool> DeleteRecord(Guid id)
+        {
+            await _taskService.DeleteRecord(id);
+            return true;
+        }
+
     }
 }
