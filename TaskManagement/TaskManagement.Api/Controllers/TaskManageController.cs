@@ -18,8 +18,8 @@ namespace TaskManagement.TaskManagement.Api.Controllers
         [HttpPost]
         public async Task<TaskManage> Create(TaskManage dto)
         {
-            return await _taskService.Create(dto);   
-            
+            return await _taskService.Create(dto);
+
         }
 
         [HttpPost("getByIdAndList")]
@@ -28,5 +28,13 @@ namespace TaskManagement.TaskManagement.Api.Controllers
             var data = _taskService.GetList(dto);
             return await data;
         }
+
+        [HttpPut("{id}")]
+        public async Task<TaskManage> UpdateRecord(Guid id, [FromBody] TaskManageDto dto)
+        {
+            var updatedTask = await _taskService.UpdateRecord(id, dto);
+            return updatedTask;
+        }
+
     }
 }

@@ -44,6 +44,8 @@ namespace TaskManagement.TaskManagement.Infrastructure.Data
 
                 entity.Property(t => t.UpdatedAt)
                     .HasDefaultValueSql("GETDATE()");
+
+                entity.Property(t => t.IsActive).HasDefaultValue(true);
             });
         }
 

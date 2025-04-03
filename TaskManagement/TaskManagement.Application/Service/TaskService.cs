@@ -35,7 +35,7 @@ namespace TaskManagement.TaskManagement.Application.Service
                 throw new Exception("Dto is null");
             }
 
-            var taskManage = _Context.Tasks.AsQueryable();
+            var taskManage = _Context.Tasks.Where(x=>x.IsActive == true).AsQueryable();
 
             if (dto.Id !=null)
             {
@@ -50,7 +50,17 @@ namespace TaskManagement.TaskManagement.Application.Service
             return await taskManage.ToListAsync();
         }
         
+        public async Task<TaskManage> UpdateRecord( Guid id,    TaskManageDto dto)
+        {
+            var data = _Context.Tasks.Where(x => x.Id == id).FirstOrDefault();
+            data.Description = dto.Description;
+            data.IsActive = dto.IsActive;
+            data.Title = dto.Title;
+            data.Status = dto.Status;
 
-        
+            await _Context.SaveChangesAsync();
+            return data;
+        }
+
     }
 }
