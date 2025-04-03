@@ -1,4 +1,9 @@
+using Hangfire;
+using Hangfire.Logging;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using TaskManagement.TaskManagement.Application.Interface;
+using TaskManagement.TaskManagement.Application.Service;
 using TaskManagement.TaskManagement.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,10 +13,18 @@ builder.Services.AddControllers();
 
 //I have used Connection From Appsetting
 builder.Services.AddDbContext<ApplicationDbContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) 
+    .CreateLogger();
 
+
+builder.Services.AddScoped<ITaskService, TaskService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -21,7 +34,9 @@ var app = builder.Build();
 //    app.UseSwagger();
 //    app.UseSwaggerUI();
 //}
-
+Log.Information("Application Starting...");
+app.UseHangfireDashboard();
+app.UseHangfireDashboard("/hangfire");
 app.UseSwagger();
 app.UseSwaggerUI();
 
