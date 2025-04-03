@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Serilog;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TaskManagement.TaskManagement.Application.Interface;
@@ -23,7 +24,8 @@ namespace TaskManagement.TaskManagement.Api.Controllers
         public async Task<TaskManage> Create(TaskManage dto)
         {
             var data = await _taskService.Create(dto);
-            BackgroundJob.Schedule(() => ExecuteTask(data.Id), data.ExecutionDateTime);
+
+			BackgroundJob.Schedule(() => ExecuteTask(data.Id), data.ExecutionDateTime);
 
             return data;
         }

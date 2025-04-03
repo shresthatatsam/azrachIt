@@ -1,5 +1,6 @@
 ﻿using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using System.Threading.Tasks;
 using TaskManagement.TaskManagement.Application.Interface;
 using TaskManagement.TaskManagement.Core.Dtos;
@@ -17,16 +18,25 @@ namespace TaskManagement.TaskManagement.Application.Service
         }
         public async Task<TaskManage> Create(TaskManage dto)
         {
-            //Added this for local Time 
-            #region LocalTime
-            dto.ExecutionDateTime = DateTime.Now;
-            dto.CreatedAt = DateTime.Now;
-            dto.UpdatedAt = DateTime.Now;
-            #endregion
+            try
+            {
+				//Added this for local Time 
+				#region LocalTime
+				dto.CreatedAt = DateTime.Now;
+				dto.UpdatedAt = DateTime.Now;
+				#endregion
 
-            await _Context.Tasks.AddAsync(dto);
-            await _Context.SaveChangesAsync();
-            return dto;
+				await _Context.Tasks.AddAsync(dto);
+				await _Context.SaveChangesAsync();
+				Log.Information("Task with id " + dto.Id + " Created Successfully");
+				return dto;
+			}
+            catch(Exception ex)
+            {
+                Log.Information(ex.ToString());
+                throw ex;
+            }
+          
         }
 
         public async Task<List<TaskManage>> GetList(TaskFilter dto)
@@ -34,7 +44,8 @@ namespace TaskManagement.TaskManagement.Application.Service
 
             if (dto == null)
             {
-                throw new Exception("Dto is null");
+				Log.Information("Dto is null");
+				throw new Exception("Dto is null");
             }
 
             var taskManage = _Context.Tasks.Where(x => x.IsActive == true).AsQueryable();
@@ -54,18 +65,28 @@ namespace TaskManagement.TaskManagement.Application.Service
 
         public async Task<TaskManage> UpdateRecord(int id, TaskManageDto dto)
         {
-            var data = _Context.Tasks.Where(x => x.Id == id).FirstOrDefault();
-            if (data != null)
+            try
             {
+				var data = _Context.Tasks.Where(x => x.Id == id).FirstOrDefault();
+				if (data != null)
+				{
 
-                data.Description = dto.Description;
-                data.IsActive = dto.IsActive;
-                data.Title = dto.Title;
-                data.Status = dto.Status;
-            }
-            await _Context.SaveChangesAsync();
-            return data;
-        }
+					data.Description = dto.Description;
+					data.IsActive = dto.IsActive;
+					data.Title = dto.Title;
+					data.Status = dto.Status;
+				}
+				await _Context.SaveChangesAsync();
+				Log.Information("data updated successfully");
+				return data;
+			}
+			catch (Exception ex)
+			{
+				Log.Information(ex.ToString());
+				throw ex;
+			}
+
+		}
 
 
         public async Task<bool> DeleteRecord(int id)
