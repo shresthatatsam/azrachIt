@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using TaskManagement.TaskManagement.Application.Interface;
 using TaskManagement.TaskManagement.Core.Dtos;
 using TaskManagement.TaskManagement.Core.Entities;
@@ -50,7 +52,7 @@ namespace TaskManagement.TaskManagement.Application.Service
             return await taskManage.ToListAsync();
         }
 
-        public async Task<TaskManage> UpdateRecord(Guid id, TaskManageDto dto)
+        public async Task<TaskManage> UpdateRecord(int id, TaskManageDto dto)
         {
             var data = _Context.Tasks.Where(x => x.Id == id).FirstOrDefault();
             if (data != null)
@@ -66,7 +68,7 @@ namespace TaskManagement.TaskManagement.Application.Service
         }
 
 
-        public async Task<bool> DeleteRecord(Guid id)
+        public async Task<bool> DeleteRecord(int id)
         {
             var taskManage = await _Context.Tasks.Where(x => x.Id == id).FirstOrDefaultAsync();
 
@@ -77,6 +79,12 @@ namespace TaskManagement.TaskManagement.Application.Service
             _Context.Tasks.Remove(taskManage);
             await _Context.SaveChangesAsync();
             return true;
+        }
+
+
+       public async Task<TaskManage> GetById(int id)
+        {
+            return await _Context.Tasks.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
     }

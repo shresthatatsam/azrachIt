@@ -7,7 +7,9 @@ namespace TaskManagement.TaskManagement.Application.Interface
     {
         Task<TaskManage> Create(TaskManage dto);
         Task<List<TaskManage>> GetList(TaskFilter dto);
-        Task<TaskManage> UpdateRecord(Guid id, TaskManageDto dto);
-        Task<bool> DeleteRecord(Guid id);
+
+        Task<TaskManage> GetById(int id);
+        Task<TaskManage> UpdateRecord(int id, TaskManageDto dto);
+        Task<bool> DeleteRecord(int id);
     }
 }

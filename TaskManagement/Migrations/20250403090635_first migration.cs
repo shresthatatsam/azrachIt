@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TaskManagement.Migrations
 {
     /// <inheritdoc />
-    public partial class TasksTableAdded : Migration
+    public partial class firstmigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -15,13 +15,15 @@ namespace TaskManagement.Migrations
                 name: "Tasks",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     ExecutionDateTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     Status = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
