@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskManagement.TaskManagement.Application.Interface;
+using TaskManagement.TaskManagement.Core.Dtos;
 using TaskManagement.TaskManagement.Core.Entities;
 
 namespace TaskManagement.TaskManagement.Api.Controllers
@@ -19,6 +20,13 @@ namespace TaskManagement.TaskManagement.Api.Controllers
         {
             return await _taskService.Create(dto);   
             
+        }
+
+        [HttpPost("getByIdAndList")]
+        public async Task<List<TaskManage>> Get(TaskFilter dto)
+        {
+            var data = _taskService.GetList(dto);
+            return await data;
         }
     }
 }

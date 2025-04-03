@@ -1,4 +1,6 @@
-﻿using TaskManagement.TaskManagement.Application.Interface;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskManagement.TaskManagement.Application.Interface;
+using TaskManagement.TaskManagement.Core.Dtos;
 using TaskManagement.TaskManagement.Core.Entities;
 using TaskManagement.TaskManagement.Infrastructure.Data;
 
@@ -25,6 +27,30 @@ namespace TaskManagement.TaskManagement.Application.Service
             return dto;
         }
 
+        public async Task<List<TaskManage>> GetList(TaskFilter dto)
+        {
 
+            if (dto == null)
+            {
+                throw new Exception("Dto is null");
+            }
+
+            var taskManage = _Context.Tasks.AsQueryable();
+
+            if (dto.Id !=null)
+            {
+                taskManage= _Context.Tasks.Where(x => x.Id == dto.Id).AsQueryable();
+            }
+
+            if(dto.Title !=null)
+            {
+                taskManage = _Context.Tasks.Where(x => x.Title == dto.Title).AsQueryable();
+            }
+
+            return await taskManage.ToListAsync();
+        }
+        
+
+        
     }
 }
